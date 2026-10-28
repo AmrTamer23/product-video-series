@@ -10,7 +10,8 @@ composed with [Remotion](https://www.remotion.dev).
 - **Narration in any language or dialect**: captions plus
   [ElevenLabs](https://elevenlabs.io) voice-over, with each step holding exactly
   as long as its line, so voice and screen stay in sync by construction.
-  Presets for English, Modern Standard Arabic and Egyptian Arabic.
+  Presets for English and three Arabic registers: Modern Standard, Egyptian
+  and Gulf.
 - **Repeatable demos**: seeded data cloned per run, and a shifted clock (app
   servers, Postgres and browser) so every re-recording shows the same plausible
   weekday morning.
@@ -33,15 +34,27 @@ Update later with `git -C ~/.claude/skills/product-video-series pull`.
 
 ## Use
 
-In any project, ask Claude Code for it in plain words — "make a series of short
-videos showing new staff how to use the system, narrated in Egyptian Arabic" —
-or scaffold directly:
+In any project, ask Claude Code for it in plain words, such as "make a series
+of short videos showing new staff how to use the system, narrated in Egyptian
+Arabic". Before it builds anything, Claude asks you four things: who the videos
+are for, the language and dialect (for Arabic: MSA, Egyptian or Gulf), the
+ElevenLabs model, and the voice. Nothing gets voiced until you've answered.
+
+Or scaffold directly:
 
 ```bash
 node ~/.claude/skills/product-video-series/scripts/init.mjs docs/videos \
-  --brand "Acme" --base-url http://localhost:3000 --lang ar --strings ar-egyptian
+  --brand "Acme" --base-url http://localhost:3000 --lang ar --strings ar-egyptian \
+  --model eleven_v4
 cd docs/videos && npm install && npx playwright install chromium ffmpeg
 ```
+
+| Flag | Values |
+|---|---|
+| `--lang` | `en` (default) or `ar` |
+| `--strings` | frame-text preset: `en`, `ar-msa`, `ar-egyptian`, `ar-gulf` (add your own in `engine/strings.mjs`) |
+| `--model` | ElevenLabs model id; default `eleven_v4`, with `eleven_multilingual_v2` as the proven fallback |
+| `--locale`, `--name` | date/number locale (`ar-SA`, `en-US` …) and the series name |
 
 Then fill in three files and run:
 
@@ -52,8 +65,9 @@ Then fill in three files and run:
 | `series.config.mjs` | language, frame text, brand colours and logo, demo day, voice |
 
 ```bash
+npm run voice -- models                  # the account's TTS models for your language (* = current)
 npm run voice -- preview egyptian male   # audition library voices on your hardest lines
-npm run record                           # voice every line, record every episode
+npm run record                           # voice and record every episode (or: record -- <id>)
 npm run studio                           # check in Remotion Studio
 npm run render                           # out/<episode>.mp4
 ```
@@ -62,11 +76,31 @@ The ElevenLabs key goes in `.env` next to `package.json`
 (`ELEVENLABS_API_KEY=…`, gitignored). Without a voice configured, the series
 records silent with captions.
 
+Every voiced line is cached, keyed by voice, model, settings and text, so
+editing one line re-voices only that line. Changing the model or voice
+re-voices the whole series. To compare models cheaply, record a single episode
+on each: `record` voices only the episodes it records. A typical 8–12 episode
+series is a few thousand characters of TTS.
+
 ## Requirements
 
 Node 20+, a web app you can run or reach, and for narration an ElevenLabs
 account. A managed demo stack additionally needs whatever the app needs
 (e.g. Docker for Postgres).
+
+## Licensing
+
+This skill is [MIT](LICENSE). The tools it drives have their own terms:
+
+- **Remotion** is not MIT. It is free for individuals, for-profit companies
+  with up to 3 employees, non-profits, and for evaluation. Larger for-profit
+  organizations need a [Remotion Company License](https://www.remotion.pro/license).
+  Read the [Remotion license](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md)
+  before you render for a company.
+- **ElevenLabs** voice-over is subject to your ElevenLabs plan. Check that
+  your plan covers commercial use of the voices you pick, including library
+  voices.
+- **Playwright** is Apache-2.0.
 
 ## Layout
 
@@ -75,4 +109,5 @@ SKILL.md          the workflow Claude follows
 references/       planning, demo stack, language, voice, recording, composition
 scripts/          init.mjs (scaffold), explore.mjs (page screenshots + element outline)
 template/         what init copies into a project: engine/, src/, and the three project files
+LICENSE           MIT
 ```
