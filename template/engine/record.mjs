@@ -35,8 +35,8 @@ mkdirSync(OUT, { recursive: true });
 
 const narrator = Narrator.fromConfig();
 if (narrator) {
-  // Voice everything before the browser starts, so API latency never shows on screen.
-  for (const text of allSpoken(EPISODES)) await narrator.line(text);
+  // Voice the episodes being recorded before the browser starts, so API latency never shows on screen.
+  for (const text of allSpoken(episodes, EPISODES)) await narrator.line(text);
   console.log(`[record] narration ready (${narrator.generated} new line(s))`);
 } else {
   console.log("[record] no voice configured — recording silent");

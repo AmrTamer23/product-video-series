@@ -140,7 +140,8 @@ export class Director {
     const id = await this.page.evaluate((texts) => {
       let best = null;
       for (const el of document.querySelectorAll("body *")) {
-        if (texts.every((t) => el.textContent.includes(t))) best = el; // document order: later = deeper
+        // Document order: later = deeper. Skip hidden copies (responsive duplicates, sr-only regions).
+        if (el.getClientRects().length && el.checkVisibility?.() !== false && texts.every((t) => el.textContent.includes(t))) best = el;
       }
       const mark = String(Math.random()).slice(2);
       best?.setAttribute("data-pvs-around", mark);

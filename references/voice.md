@@ -37,9 +37,25 @@ dialect; "dramatic"/"cheerful" styles tire over eight episodes.
 
 ## 3. Model and settings
 
-- `eleven_multilingual_v2` (default): solid Arabic and most languages; honours
-  vowel marks. Newer models may be more expressive — test with `preview`
-  before switching, since changing model re-voices everything.
+The model is the user's choice; ask them (SKILL.md step 0) and don't default
+silently. Always offer the list from the account rather than from memory, since
+ElevenLabs ships new models often:
+
+```bash
+npm run voice -- models     # TTS models that support language.code; * = current
+```
+
+- `eleven_v4` is the default and the recommended option: 90+ languages and the
+  most natural delivery. In one Egyptian-Arabic series, v4's pacing was within
+  ±0.7 s per line of v2's, so switching doesn't disturb the timing.
+- `eleven_multilingual_v2` is the fallback: proven on Arabic and it honours
+  vowel marks. Offer it when a word keeps being misread on v4.
+- To compare, set `modelId`, run `npm run record -- <one-id> && npm run render
+  -- <one-id>`, and keep both MP4s. The recorder voices only the episodes being
+  recorded, so that costs about 10 clips. Then restore the model; the old clips
+  are still cached. Send both to the user and let them choose by ear.
+- Changing the model re-voices everything, so confirm with the user before
+  switching an already-recorded series.
 - `speed: 0.95` — a touch slower than default; viewers are also watching.
 - `stability` 0.5–0.6 keeps a consistent narrator across 50+ separate clips.
 - `style` low (≤0.2): high style varies delivery line to line.
@@ -51,7 +67,7 @@ settings, spoken text); `public/voice/index.json` holds durations. Editing one
 line re-voices only that line; changing voice/model/settings re-voices all.
 `npm run voice` prints the series' character count — a typical 8-episode
 series is ~3–4k characters including spoken titles; previews ~100–250
-characters per voice. `record` voices everything before opening the browser,
+characters per voice. `record` voices the episodes it records before opening the browser,
 so API latency never shows on screen.
 
 ## 5. Alternatives

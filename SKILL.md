@@ -42,17 +42,44 @@ user something concrete early (a recorded episode, a still, a voice sample) and
 let their reaction steer — tone, language and pacing are judgement calls they
 should make with real output in front of them.
 
+### 0. Ask the user for the settings (required, before anything else)
+
+Never pick these yourself, even when one looks obvious. Ask them in one round of
+questions (AskUserQuestion when available) before scaffolding, because they
+decide the init flags, the scripts and the voice cache:
+
+1. **Audience**: who the videos are for (new staff, managers, clients …).
+2. **Language and dialect**: for Arabic, offer the three registers the
+   `arabic-content` skill uses: **MSA** (`ar-msa`), **Egyptian**
+   (`ar-egyptian`) and **Gulf** (`ar-gulf`), with the product's UI language as the
+   recommended option. For other languages, ask for the language and regional
+   variant.
+3. **ElevenLabs model**: run `npm run voice -- models` (after scaffolding and
+   once the key is in `.env`; until then, ask for the model as a follow-up).
+   It lists the models this account can use for the language, with `*` on the
+   current one. Offer `eleven_v4` as the recommended default (first option) and
+   `eleven_multilingual_v2` as the fallback, plus anything else the user names. Mention that a
+   one-episode A/B is cheap: record one episode on each model and send both.
+   Switching models later re-voices the whole series.
+4. **Voice**: whether they have one in mind or want previews (step 6).
+
+Record the answers: `--strings` and `--model` in init, then
+`series.config.mjs → language.voice` and `voice.modelId`. Restate them back in
+one line. If the user later changes the dialect or the model, ask before
+re-voicing; it costs a full series of clips.
+
 ### 1. Scaffold
 
 ```bash
 node ~/.claude/skills/product-video-series/scripts/init.mjs docs/videos \
-  --brand "Acme" --base-url http://localhost:3000 --lang ar --strings ar-msa
+  --brand "Acme" --base-url http://localhost:3000 --lang ar --strings ar-msa \
+  --model eleven_v4
 cd docs/videos && npm install && npx playwright install chromium ffmpeg
 ```
 
 Keep it outside the app's package workspace (or exclude it) so its
 dependencies don't touch the app's lockfile. Presets: `en`, `ar-msa`,
-`ar-egyptian`; add others in `engine/strings.mjs`.
+`ar-egyptian`, `ar-gulf`; add others in `engine/strings.mjs`.
 
 ### 2. Understand the system as a newcomer would
 
@@ -80,7 +107,7 @@ first cut) and a managed stack (repeatable), and write `stack.mjs`.
 
 ### 5. Write the scripts
 
-Settle the language first: register and dialect, who speaks ("we" keeps it
+Write in the dialect the user picked in step 0: register and dialect, who speaks ("we" keeps it
 gender-neutral), UI labels quoted exactly as on screen. Then write short,
 direct, one-idea lines — they will be heard, not read. Give a line a `say`
 variant when the voice needs a different spelling (vowel marks on an

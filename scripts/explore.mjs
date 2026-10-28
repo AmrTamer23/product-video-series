@@ -21,7 +21,8 @@ const value = (name) => (args.includes(`--${name}`) ? args[args.indexOf(`--${nam
 const pages = args.slice(1).filter((a, i, all) => !a.startsWith("--") && !all[i - 1]?.startsWith("--user"));
 
 const requireFromProject = createRequire(path.join(project, "package.json"));
-const { chromium } = await import(pathToFileURL(requireFromProject.resolve("playwright")).href);
+const playwright = await import(pathToFileURL(requireFromProject.resolve("playwright")).href);
+const chromium = playwright.chromium ?? playwright.default.chromium; // CJS interop differs across Node versions
 const stack = (await import(pathToFileURL(path.join(project, "stack.mjs")).href)).default;
 const config = (await import(pathToFileURL(path.join(project, "series.config.mjs")).href)).default;
 

@@ -32,4 +32,13 @@ export const STRINGS = {
     seriesEndTitle: "كده جاهزين نبدأ الشغل",
     spokenTitle: (n, title) => `الحلقة ${AR_ORDINALS[n - 1] ?? n}: ${title}.`,
   },
+  // Gulf (Khaleeji) word choice on an MSA base — the safest Gulf register for narration.
+  "ar-gulf": {
+    kicker: (n, total) => `دليل البدء · الحلقة ${n} من ${total}`,
+    episodeOf: (n, total) => `الحلقة ${n} من ${total}`,
+    nextUp: "في الحلقة الجاية",
+    seriesEnd: "وبكذا خلّصنا السلسلة",
+    seriesEndTitle: "الحين جاهزين نبدأ الشغل",
+    spokenTitle: (n, title) => `الحلقة ${AR_ORDINALS[n - 1] ?? n}: ${title}.`,
+  },
 };

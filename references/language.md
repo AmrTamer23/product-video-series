@@ -16,8 +16,10 @@ edit follows it:
 - **Register / dialect.** The product's UI language is the default (an MSA
   app → MSA narration). A dialect is a deliberate choice — usually to match
   the narrator's voice or a local audience — and wins on warmth but reads
-  informal; it must never leak into the app's own labels. Ask the user when
-  in doubt; let them hear a preview of both if they can't decide.
+  informal; it must never leak into the app's own labels. Always ask the user
+  (SKILL.md step 0): for Arabic, MSA / Egyptian / Gulf (presets `ar-msa`,
+  `ar-egyptian`, `ar-gulf`), as the `arabic-content` skill offers them. If
+  they can't decide, let them hear a preview of each.
 - **Who speaks.** First person plural ("we click…", «نضغط…», «بندوس…») is
   gender-neutral and sounds like a colleague showing you. Avoid addressing the
   viewer with gendered imperatives in gendered languages.
@@ -80,7 +82,7 @@ use it to write and lint the script — it carries the glossary and dialect rule
 ## 5. Frame strings and new languages
 
 The frame's own words (intro kicker, top bar, outro, spoken title) come from
-`engine/strings.mjs` presets (`en`, `ar-msa`, `ar-egyptian`) via
+`engine/strings.mjs` presets (`en`, `ar-msa`, `ar-egyptian`, `ar-gulf`) via
 `series.config.mjs → strings`. For a new language, copy a preset, translate,
 and make `spokenTitle` produce something natural to say ("Episode three:
 Requesting leave."). Set `language.dir` for RTL/LTR and pick a font that

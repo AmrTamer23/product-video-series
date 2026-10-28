@@ -48,7 +48,7 @@ export default {
   /** ElevenLabs narration. Leave voiceId empty to record silent with captions only. */
   voice: {
     voiceId: "",
-    modelId: "eleven_multilingual_v2",
+    modelId: "__MODEL__", // the user's pick from `npm run voice -- models`; changing it re-voices everything
     voiceSettings: { stability: 0.55, similarity_boost: 0.8, style: 0.15, use_speaker_boost: true, speed: 0.95 },
     // `npm run voice -- preview`: which library voices to try, and which lines they read
     // ([episode, line] — pick lines with the words most likely to be mispronounced).

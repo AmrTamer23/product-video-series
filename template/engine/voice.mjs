@@ -76,8 +76,8 @@ export class Narrator {
 }
 
 /** Everything the series says aloud, in order: each intro's spoken title, then the episode's lines. */
-export function allSpoken(episodes) {
-  return episodes.flatMap((ep, i) => [config.strings.spokenTitle(i + 1, ep.title), ...ep.script.map(spoken)]);
+export function allSpoken(episodes, series = episodes) {
+  return episodes.flatMap((ep) => [config.strings.spokenTitle(series.indexOf(ep) + 1, ep.title), ...ep.script.map(spoken)]);
 }
 
 async function voiceAll() {
@@ -105,6 +105,16 @@ async function libraryVoices(accent, gender, pageSize = 40) {
 }
 
 /** One sample per voice, reading lines worth hearing (config.voice.preview.lines, else the first two). */
+/** The TTS models this account can use for the series' language — the list to offer the user. */
+async function models() {
+  const res = await fetch(`${API}/v1/models`, { headers: { "xi-api-key": process.env.ELEVENLABS_API_KEY ?? "" } });
+  if (!res.ok) throw new Error(`ElevenLabs ${res.status}: ${await res.text()}`);
+  const lang = config.language.code.split("-")[0];
+  return (await res.json())
+    .filter((m) => m.can_do_text_to_speech && m.languages?.some((l) => l.language_id === lang))
+    .map((m) => ({ id: m.model_id, name: m.name, description: m.description, current: m.model_id === voice.modelId }));
+}
+
 async function preview(accent = voice.preview?.accent, gender = voice.preview?.gender) {
   const { EPISODES } = await import("../episodes.mjs");
   const picks = voice.preview?.lines ?? [[0, 0], [0, 1]];
@@ -123,7 +133,9 @@ async function preview(accent = voice.preview?.accent, gender = voice.preview?.g
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const [cmd, ...rest] = process.argv.slice(2);
   if (cmd === "preview") await preview(rest[0], rest[1]);
-  else if (cmd === "voices") {
+  else if (cmd === "models") {
+    for (const m of await models()) console.log([m.current ? "*" : " ", m.id, m.name, m.description].join(" | "));
+  } else if (cmd === "voices") {
     for (const v of await libraryVoices(rest[0], rest[1])) console.log([v.name, v.gender, v.age, v.accent, v.use_case, v.voice_id, v.preview_url].join(" | "));
   } else await voiceAll();
 }

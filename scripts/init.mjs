@@ -2,7 +2,7 @@
 // Scaffolds a video-series project from ../template.
 //
 //   node init.mjs <target-dir> --brand "Acme" --base-url http://localhost:3000 \
-//     [--lang en|ar] [--strings en|ar-msa|ar-egyptian] [--locale en-US] [--name onboarding]
+//     [--lang en|ar] [--strings en|ar-msa|ar-egyptian|ar-gulf] [--locale en-US] [--model <elevenlabs model id>] [--name onboarding]
 //
 // Refuses to write into a non-empty directory. Prints the next steps.
 import { cpSync, existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
@@ -18,7 +18,7 @@ const opt = (name, fallback) => {
   return i >= 0 ? args[i + 1] : fallback;
 };
 if (!target) {
-  console.error("usage: init.mjs <target-dir> --brand <name> --base-url <url> [--lang en|ar] [--strings <preset>] [--locale <locale>]");
+  console.error("usage: init.mjs <target-dir> --brand <name> --base-url <url> [--lang en|ar] [--strings <preset>] [--locale <locale>] [--model <id>]");
   process.exit(1);
 }
 
@@ -31,6 +31,7 @@ const values = {
   __LOCALE__: opt("locale", lang === "ar" ? "ar-SA" : "en-US"),
   __DIR__: lang === "ar" ? "rtl" : "ltr",
   __STRINGS_PRESET__: preset,
+  __MODEL__: opt("model", "eleven_v4"),
   __BRAND__: opt("brand", "Product"),
   __BASE_URL__: opt("base-url", "http://localhost:3000"),
   __VOICE_NOTES__:
