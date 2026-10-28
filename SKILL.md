@@ -134,6 +134,26 @@ at them before rendering everything; then `npm run render` and spot-check one
 MP4. Send the videos; mention any product bugs the recording surfaced (they
 always do). → `references/composition.md`
 
+### 9. Keep them in sync with the app
+
+The videos go stale silently the next time the UI changes, so set up the checks
+before calling the series done:
+
+1. Point `series.config.mjs → check.catalogs` at the app's UI text (the locale
+   the narration quotes) and run `npm run check -- labels`. It confirms every
+   «quoted» label still exists, takes seconds and needs no browser.
+2. Run `npm run check`. It replays every episode fast against the app, with no
+   video or voice, and fails on a missing element, a changed flow, unused
+   script lines, or a quoted label that never appeared on screen.
+3. Give each episode `covers` (repo-relative globs of the code it shows), so
+   `npm run check -- --since origin/main` flags episodes a change touched even
+   when they still pass.
+4. Offer the user the CI workflow: labels blocking, the fast run as a warning.
+   Tell them how to fix a stale episode: fix it, `check -- <id>`, re-record that
+   episode only, and replace the file in place so embedded links keep working.
+
+→ `references/keeping-in-sync.md`
+
 ## Lessons that cost time to learn
 
 | Symptom | Cause → fix |
@@ -156,3 +176,4 @@ always do). → `references/composition.md`
 - `references/voice.md` — ElevenLabs setup, previews, models/settings, caching and cost, alternatives
 - `references/recording.md` — Director API, selector strategy, timing, conditional UI, debugging failures
 - `references/composition.md` — the frame, camera/spotlight, captions and audio, branding, stills QA, rendering
+- `references/keeping-in-sync.md` — `npm run check` (fast replay, on-screen labels), `check -- labels` (catalogs), `covers` + `--since`, CI workflow, fixing a stale episode

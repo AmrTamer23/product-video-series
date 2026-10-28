@@ -75,4 +75,5 @@ Next:
   1. stack.mjs        — how to reach the app and sign in (references/stack.md)
   2. episodes.mjs     — the series plan and scripts (references/planning.md, language.md)
   3. series.config.mjs — brand colours, logo, clock, voice
-  4. npm run record → npm run studio (check) → npm run render`);
+  4. npm run record → npm run studio (check) → npm run render
+  5. npm run check (-- labels) — keep the videos matching the app (references/keeping-in-sync.md)`);

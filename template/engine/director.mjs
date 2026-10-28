@@ -42,11 +42,18 @@ export const spoken = (line) => (typeof line === "string" ? line : line.say);
 const readingMs = (text) => 1400 + text.trim().split(/\s+/).length * 420;
 
 export class Director {
-  constructor(page, { meta, viewport, narrator = null }) {
+  /**
+   * `fast` is for `npm run check`: the same steps against the same app, with
+   * waits, glides and typing cut short, and the visible text kept after every
+   * line so the check can confirm the labels the narration quotes were on screen.
+   */
+  constructor(page, { meta, viewport, narrator = null, fast = false }) {
     this.page = page;
     this.meta = meta;
     this.viewport = viewport;
     this.narrator = narrator;
+    this.fast = fast;
+    this.screens = [];
     this.events = [];
     this.t0 = Date.now();
     this.mouse = { x: viewport.width / 2, y: viewport.height / 2 };
@@ -78,7 +85,12 @@ export class Director {
   }
 
   async wait(ms) {
-    await this.page.waitForTimeout(ms);
+    await this.page.waitForTimeout(this.fast ? Math.min(ms, 80) : ms);
+  }
+
+  /** In a check, what the viewer could read when a line played. */
+  async seen() {
+    if (this.fast) this.screens.push(await this.page.evaluate(() => document.body.innerText).catch(() => ""));
   }
 
   /**
@@ -113,6 +125,7 @@ export class Director {
   async say(line, { hold } = {}) {
     const { ms, audio } = await this.timing(line, hold);
     this.events.push({ type: "caption", t: this.now(), text: shown(line), duration: ms / 1000, audio: audio?.file ?? null });
+    await this.seen();
     await this.wait(ms);
   }
 
@@ -137,17 +150,22 @@ export class Director {
    * stat tiles — for when the DOM has no handle on the block you want to show.
    */
   async around(...texts) {
-    const id = await this.page.evaluate((texts) => {
-      let best = null;
-      for (const el of document.querySelectorAll("body *")) {
-        // Document order: later = deeper. Skip hidden copies (responsive duplicates, sr-only regions).
-        if (el.getClientRects().length && el.checkVisibility?.() !== false && texts.every((t) => el.textContent.includes(t))) best = el;
-      }
-      const mark = String(Math.random()).slice(2);
-      best?.setAttribute("data-pvs-around", mark);
-      return mark;
-    }, texts);
-    return this.page.locator(`[data-pvs-around="${id}"]`);
+    // Waits for the block like any locator would, instead of looking once while the page may still be rendering.
+    const found = await this.page
+      .waitForFunction((texts) => {
+        let best = null;
+        for (const el of document.querySelectorAll("body *")) {
+          // Document order: later = deeper. Skip hidden copies (responsive duplicates, sr-only regions).
+          if (el.getClientRects().length && el.checkVisibility?.() !== false && texts.every((t) => el.textContent.includes(t))) best = el;
+        }
+        if (!best) return null;
+        const mark = String(Math.random()).slice(2);
+        best.setAttribute("data-pvs-around", mark);
+        return mark;
+      }, texts)
+      .catch(() => null);
+    if (!found) throw new Error(`no visible element contains all of: ${texts.map((t) => `"${t}"`).join(" + ")}`);
+    return this.page.locator(`[data-pvs-around="${await found.jsonValue()}"]`);
   }
 
   /** Draws a focus ring around an element (rendered later by Remotion) while a line plays. */
@@ -159,10 +177,11 @@ export class Director {
     const t = this.now();
     this.events.push({ type: "focus", t, duration: ms / 1000, rect: { x: b.x - pad, y: b.y - pad, width: b.width + pad * 2, height: b.height + pad * 2 } });
     if (line) this.events.push({ type: "caption", t, text: shown(line), duration: ms / 1000, audio: audio?.file ?? null });
+    await this.seen();
     await this.wait(ms);
   }
 
-  async glide(x, y, steps = 28) {
+  async glide(x, y, steps = this.fast ? 3 : 28) {
     const from = { ...this.mouse };
     for (let i = 1; i <= steps; i++) {
       const p = i / steps;
@@ -185,7 +204,7 @@ export class Director {
 
   async type(locator, text, { delay = 70 } = {}) {
     await this.click(locator, { settle: 250 });
-    await locator.pressSequentially(text, { delay });
+    await locator.pressSequentially(text, { delay: this.fast ? 0 : delay });
     await this.wait(400);
   }
 

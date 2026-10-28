@@ -18,6 +18,9 @@
 //   setup     async ({ request, stack }) => input — work the viewer shouldn't see,
 //             e.g. creating an invitation; `request(user)` is a signed-in API client
 //   script    the narration
+//   covers    repo-relative globs of the code this episode shows, e.g.
+//             ["src/app/requests/**", "src/components/requests/**"]; `npm run
+//             check -- --since <ref>` flags the episode when they change
 //   run       async (d, page, input) — the episode itself; see references/recording.md
 
 export const EPISODES = [
@@ -27,6 +30,7 @@ export const EPISODES = [
     subtitle: "__EPISODE_SUBTITLE__",
     at: "09:00",
     login: "__DEMO_USER__",
+    covers: [],
     script: [
       "__LINE_1__",
       "__LINE_2__",

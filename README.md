@@ -18,6 +18,10 @@ composed with [Remotion](https://www.remotion.dev).
 - **Polished frame**: branded intro with a spoken title, spotlight and gentle
   camera on what's being explained, captions, an outro announcing the next
   episode; 1920×1080 H.264 output.
+- **Videos that don't go stale**: `npm run check` replays every episode fast
+  against the app and fails when a step's element is gone or a label the
+  narration quotes is no longer on screen. `check -- labels` does the label
+  check against your i18n files in seconds, so it can run on every PR.
 - **The method, not just code**: how to plan a series for newcomers, write
   scripts for the ear (including Arabic vowel-mark pitfalls in TTS), pick a
   voice, and QA before rendering.
@@ -70,6 +74,8 @@ npm run voice -- preview egyptian male   # audition library voices on your harde
 npm run record                           # voice and record every episode (or: record -- <id>)
 npm run studio                           # check in Remotion Studio
 npm run render                           # out/<episode>.mp4
+npm run check                            # later: do the videos still match the app?
+npm run check -- labels                  # no browser: quoted labels vs your i18n files (CI-friendly)
 ```
 
 The ElevenLabs key goes in `.env` next to `package.json`
@@ -106,7 +112,7 @@ This skill is [MIT](LICENSE). The tools it drives have their own terms:
 
 ```
 SKILL.md          the workflow Claude follows
-references/       planning, demo stack, language, voice, recording, composition
+references/       planning, demo stack, language, voice, recording, composition, keeping in sync
 scripts/          init.mjs (scaffold), explore.mjs (page screenshots + element outline)
 template/         what init copies into a project: engine/, src/, and the three project files
 LICENSE           MIT

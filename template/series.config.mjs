@@ -45,6 +45,14 @@ export default {
    */
   clock: null, // { day: "2026-10-25", utcOffset: "+03:00" }
 
+  /**
+   * `npm run check`: keeps the videos honest as the app changes (references/keeping-in-sync.md).
+   * catalogs     the app's UI text (files or folders, relative to this folder) for
+   *              `check -- labels`, e.g. ["../../src/locales/ar.json"]
+   * ignoreLabels quoted words that are data, not UI text (a demo client's name)
+   */
+  check: { catalogs: [], ignoreLabels: [] },
+
   /** ElevenLabs narration. Leave voiceId empty to record silent with captions only. */
   voice: {
     voiceId: "",

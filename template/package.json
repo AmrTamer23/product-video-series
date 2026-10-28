@@ -6,6 +6,7 @@
   "scripts": {
     "record": "node --env-file-if-exists=.env engine/record.mjs",
     "voice": "node --env-file-if-exists=.env engine/voice.mjs",
+    "check": "node engine/check.mjs",
     "studio": "remotion studio",
     "render": "node render.mjs",
     "typecheck": "tsc -p ."
