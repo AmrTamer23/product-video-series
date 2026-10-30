@@ -39,13 +39,13 @@ English: same demo day, same steps, with the app switched to its English UI,
 an English script and an American voice. The engine is the same; only the
 script, the labels the steps click, and `series.config.mjs` change.
 
-<p>
-  <a href="docs/example/check-in-en.mp4"><img src="docs/example/showcase-en.jpg" width="49%" alt="English: the location prompt that comes before checking in"></a>
-  <a href="docs/example/check-in-ar.mp4"><img src="docs/example/showcase-ar.jpg" width="49%" alt="Egyptian Arabic: the attendance history, with the narration as a caption"></a>
-</p>
+**English**
 
-Watch the episode: [English (1 min)](docs/example/check-in-en.mp4) ·
-[Egyptian Arabic (1 min)](docs/example/check-in-ar.mp4)
+https://github.com/user-attachments/assets/432dc115-d11f-4b4a-930b-16a0744bcce3
+
+**Egyptian Arabic**
+
+https://github.com/user-attachments/assets/51b14844-001a-4cc3-97f8-8d8ab81e3349
 
 | | |
 |---|---|
