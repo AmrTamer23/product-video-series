@@ -40,9 +40,12 @@ an English script and an American voice. The engine is the same; only the
 script, the labels the steps click, and `series.config.mjs` change.
 
 <p>
-  <img src="docs/example/showcase-en.jpg" width="49%" alt="English: the location prompt that comes before checking in">
-  <img src="docs/example/showcase-ar.jpg" width="49%" alt="Egyptian Arabic: the attendance history, with the narration as a caption">
+  <a href="docs/example/check-in-en.mp4"><img src="docs/example/showcase-en.jpg" width="49%" alt="English: the location prompt that comes before checking in"></a>
+  <a href="docs/example/check-in-ar.mp4"><img src="docs/example/showcase-ar.jpg" width="49%" alt="Egyptian Arabic: the attendance history, with the narration as a caption"></a>
 </p>
+
+Watch the episode: [English (1 min)](docs/example/check-in-en.mp4) ·
+[Egyptian Arabic (1 min)](docs/example/check-in-ar.mp4)
 
 | | |
 |---|---|
