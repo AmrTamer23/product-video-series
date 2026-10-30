@@ -45,7 +45,7 @@ should make with real output in front of them.
 ### 0. Ask the user for the settings (required, before anything else)
 
 Never pick these yourself, even when one looks obvious. Ask them in one round of
-questions (AskUserQuestion when available) before scaffolding, because they
+questions (your question tool when you have one) before scaffolding, because they
 decide the init flags, the scripts and the voice cache:
 
 1. **Audience**: who the videos are for (new staff, managers, clients …).
@@ -71,7 +71,7 @@ re-voicing; it costs a full series of clips.
 ### 1. Scaffold
 
 ```bash
-node ~/.claude/skills/product-video-series/scripts/init.mjs docs/videos \
+node <this skill's folder>/scripts/init.mjs docs/videos \
   --brand "Acme" --base-url http://localhost:3000 --lang ar --strings ar-msa \
   --model eleven_v4
 cd docs/videos && npm install && npx playwright install chromium ffmpeg

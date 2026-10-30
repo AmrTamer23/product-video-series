@@ -1,9 +1,9 @@
 # product-video-series
 
-A [Claude Code](https://claude.com/claude-code) skill for producing a narrated
-video series that introduces a web app to new users — onboarding, "getting
-started" and training videos — recorded from the **real running app** and
-composed with [Remotion](https://www.remotion.dev).
+A skill for coding agents (Claude Code, Codex, or any agent that can follow a
+`SKILL.md`) for producing a narrated video series that introduces a web app to
+new users — onboarding, "getting started" and training videos — recorded from
+the **real running app** and composed with [Remotion](https://www.remotion.dev).
 
 ![A frame from an English onboarding episode: the app's location prompt in a spotlight, with the narration as a caption](docs/example/showcase-en.jpg)
 
@@ -106,26 +106,32 @@ order.
 
 ## Install
 
-Clone into your user skills folder; Claude Code then offers it in every project:
+Clone it where your agent loads skills:
 
 ```bash
-git clone https://github.com/AmrTamer23/product-video-series ~/.claude/skills/product-video-series
+git clone https://github.com/AmrTamer23/product-video-series ~/.claude/skills/product-video-series   # Claude Code
+git clone https://github.com/AmrTamer23/product-video-series ~/.codex/skills/product-video-series    # Codex
 ```
 
-Update later with `git -C ~/.claude/skills/product-video-series pull`.
+Any other agent: clone it anywhere and point the agent at `SKILL.md`, for
+example with a line in your project's `AGENTS.md`: *"For narrated product
+videos, follow /path/to/product-video-series/SKILL.md."*
+
+Update later with `git pull` in that folder.
 
 ## Use
 
-In any project, ask Claude Code for it in plain words, such as "make a series
+In any project, ask your agent for it in plain words, such as "make a series
 of short videos showing new staff how to use the system, narrated in Egyptian
-Arabic". Before it builds anything, Claude asks you four things: who the videos
-are for, the language and dialect (for Arabic: MSA, Egyptian or Gulf), the
-ElevenLabs model, and the voice. Nothing gets voiced until you've answered.
+Arabic". Before it builds anything, the agent asks you four things: who the
+videos are for, the language and dialect (for Arabic: MSA, Egyptian or Gulf),
+the ElevenLabs model, and the voice. Nothing gets voiced until you've answered.
 
 Or scaffold directly:
 
 ```bash
-node ~/.claude/skills/product-video-series/scripts/init.mjs docs/videos \
+SKILL=~/.claude/skills/product-video-series   # wherever you cloned it
+node "$SKILL/scripts/init.mjs" docs/videos \
   --brand "Acme" --base-url http://localhost:3000 --lang ar --strings ar-egyptian \
   --model eleven_v4
 cd docs/videos && npm install && npx playwright install chromium ffmpeg
