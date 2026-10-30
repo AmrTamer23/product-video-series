@@ -5,7 +5,7 @@ video series that introduces a web app to new users — onboarding, "getting
 started" and training videos — recorded from the **real running app** and
 composed with [Remotion](https://www.remotion.dev).
 
-![A frame from an Egyptian-Arabic onboarding episode: the app's chat screen, a spotlight on the message box, and the narration as a caption](docs/example/series-frame.jpg)
+![A frame from an English onboarding episode: the app's location prompt in a spotlight, with the narration as a caption](docs/example/showcase-en.jpg)
 
 - **Real screens**: Playwright drives the app with a drawn, gliding cursor and
   human-speed typing; no mockups.
@@ -34,10 +34,20 @@ The frames on this page come from a real run on a bilingual (Arabic-first, RTL)
 sales CRM, made for every new employee. The client's name and logo are
 replaced or masked, and all data shown is the video-only demo seed.
 
+**One episode, two languages.** The check-in episode was also recorded in
+English: same demo day, same steps, with the app switched to its English UI,
+an English script and an American voice. The engine is the same; only the
+script, the labels the steps click, and `series.config.mjs` change.
+
+<p>
+  <img src="docs/example/showcase-en.jpg" width="49%" alt="English: the location prompt that comes before checking in">
+  <img src="docs/example/showcase-ar.jpg" width="49%" alt="Egyptian Arabic: the attendance history, with the narration as a caption">
+</p>
+
 | | |
 |---|---|
 | Audience | all new employees; the four sales episodes only for sales roles |
-| Narration | Egyptian Arabic, `eleven_v4`, a library voice picked from eight previews |
+| Narration | Egyptian Arabic, `eleven_v4`, a library voice picked from eight previews; episode 2 also in English with an American voice |
 | Output | 12 episodes, 12.6 minutes in all (45 s to 1 min 38 s each), 1920×1080 |
 | Voice-over | 85 script lines and 12 spoken titles, 5,366 characters of TTS |
 | Persona | one sales rep through one Monday, from first sign-in to check-out |
