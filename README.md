@@ -5,6 +5,8 @@ video series that introduces a web app to new users — onboarding, "getting
 started" and training videos — recorded from the **real running app** and
 composed with [Remotion](https://www.remotion.dev).
 
+![A frame from an Egyptian-Arabic onboarding episode: the app's chat screen, a spotlight on the message box, and the narration as a caption](docs/example/series-frame.jpg)
+
 - **Real screens**: Playwright drives the app with a drawn, gliding cursor and
   human-speed typing; no mockups.
 - **Narration in any language or dialect**: captions plus
@@ -25,6 +27,69 @@ composed with [Remotion](https://www.remotion.dev).
 - **The method, not just code**: how to plan a series for newcomers, write
   scripts for the ear (including Arabic vowel-mark pitfalls in TTS), pick a
   voice, and QA before rendering.
+
+## Example: a 12-episode Arabic onboarding series
+
+The frames on this page come from a real run on a bilingual (Arabic-first, RTL)
+sales CRM, made for every new employee. The client's name and logo are
+replaced or masked, and all data shown is the video-only demo seed.
+
+| | |
+|---|---|
+| Audience | all new employees; the four sales episodes only for sales roles |
+| Narration | Egyptian Arabic, `eleven_v4`, a library voice picked from eight previews |
+| Output | 12 episodes, 12.6 minutes in all (45 s to 1 min 38 s each), 1920×1080 |
+| Voice-over | 85 script lines and 12 spoken titles, 5,366 characters of TTS |
+| Persona | one sales rep through one Monday, from first sign-in to check-out |
+
+**The series** follows the order a newcomer meets things: first sign-in and
+the welcome tour → check-in → the dashboard → notifications and team chat →
+requesting time off → company files → profile and bonuses → companies and
+deals → follow-ups → a new quotation → fixing a quotation the manager sent back
+→ check-out. Each episode picks up the state the previous one left: the
+check-in from episode 2 is the one checked out of in episode 12.
+
+**The demo stack** runs the app's own production build against a private
+Postgres cluster. A template database is migrated, dev-seeded and topped up
+with an Arabic video-only seed (people, clients, deals, chat, a returned
+quotation, company files, a bonus), then cloned fresh for every full run. The
+clock is pinned to Monday 2 November 2026 in Riyadh for the app servers, the
+database and the browser, so each re-recording shows the same working day.
+
+**A script** is a list of spoken lines; `run()` performs them, and each step
+holds exactly as long as its line:
+
+```js
+script: [
+  "لما نفتح النظام الصبح، كارت الحساب بيقول إننا لسه ما سجّلناش حضور.",
+  "عشان نسجّل حضورنا، بندوس على «تسجيل الحضور» اللي فوق.",
+  // A `say` variant fixes the voice without changing the caption:
+  { text: "ومن صفحة «الحضور» نشوف سجلّ أيامنا…", say: "ومن صفحة «الحضور» نشوف سِجِلّ أيامنا…" },
+],
+async run(d, page) {
+  const line = d.lines(this.script);
+  await d.point(accountCard(page), line());
+  await d.point(checkIn, line());
+  await d.click(checkIn);
+  // …
+},
+```
+
+<p>
+  <img src="docs/example/series-intro.jpg" width="49%" alt="Intro card: episode 4 of 12, «الإشعارات والرسائل», with its subtitle">
+  <img src="docs/example/series-dialog.jpg" width="49%" alt="Spotlight on a date picker inside the leave-request dialog, with the caption below">
+</p>
+
+**Shipping it**: the MP4s went to a Google Drive folder shared by link, and
+the app got a training page that plays them through Drive's embedded player,
+with the sales episodes gated on the same permission as the Deals screen.
+
+**What the recording found**: walking every screen as a newcomer surfaced five
+product issues the team hadn't noticed. The welcome tour described a menu that
+had become a link; a role badge was left untranslated; Arabic names got their
+avatar initials from the first word only; the date picker spoke English inside
+the Arabic UI; and a live timer rendered its Arabic and Latin parts out of
+order.
 
 ## Install
 
@@ -92,7 +157,7 @@ series is a few thousand characters of TTS.
 
 Node 20+, a web app you can run or reach, and for narration an ElevenLabs
 account. A managed demo stack additionally needs whatever the app needs
-(e.g. Docker for Postgres).
+(e.g. Docker or a local Postgres install for the database).
 
 ## Licensing
 
