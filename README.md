@@ -123,9 +123,10 @@ Update later with `git pull` in that folder.
 
 In any project, ask your agent for it in plain words, such as "make a series
 of short videos showing new staff how to use the system, narrated in Egyptian
-Arabic". Before it builds anything, the agent asks you four things: who the
+Arabic". Before it builds anything, the agent asks you five things: who the
 videos are for, the language and dialect (for Arabic: MSA, Egyptian or Gulf),
-the ElevenLabs model, and the voice. Nothing gets voiced until you've answered.
+the ElevenLabs model, the voice, and whether to add a CI check that flags
+videos the next UI change makes stale. Nothing gets voiced until you've answered.
 
 Or scaffold directly:
 

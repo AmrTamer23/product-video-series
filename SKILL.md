@@ -62,10 +62,15 @@ decide the init flags, the scripts and the voice cache:
    one-episode A/B is cheap: record one episode on each model and send both.
    Switching models later re-voices the whole series.
 4. **Voice**: whether they have one in mind or want previews (step 6).
+5. **CI check**: whether to add a CI workflow that catches videos going stale
+   when the UI changes (step 9). Offer, recommended first: **labels blocking +
+   fast run as a warning**; **labels only** (no app needed in CI, seconds);
+   **no CI** (they run `npm run check` by hand). Detect the CI they use
+   (`.github/workflows/`, `.gitlab-ci.yml`, …) and name it in the question.
 
 Record the answers: `--strings` and `--model` in init, then
-`series.config.mjs → language.voice` and `voice.modelId`. Restate them back in
-one line. If the user later changes the dialect or the model, ask before
+`series.config.mjs → language.voice` and `voice.modelId`, and the CI choice for
+step 9. Restate them back in one line. If the user later changes the dialect or the model, ask before
 re-voicing; it costs a full series of clips.
 
 ### 1. Scaffold
@@ -148,8 +153,12 @@ before calling the series done:
 3. Give each episode `covers` (repo-relative globs of the code it shows), so
    `npm run check -- --since origin/main` flags episodes a change touched even
    when they still pass.
-4. Offer the user the CI workflow: labels blocking, the fast run as a warning.
-   Tell them how to fix a stale episode: fix it, `check -- <id>`, re-record that
+4. Add the CI workflow the user picked in step 0 (none, labels only, or labels
+   blocking + the fast run as a warning), adapted to their CI and to what
+   `stack.mjs` needs to start the app there. Run each job's commands locally
+   once before committing the workflow. If they chose no CI, mention once that
+   it can be added later.
+5. Tell them how to fix a stale episode: fix it, `check -- <id>`, re-record that
    episode only, and replace the file in place so embedded links keep working.
 
 → `references/keeping-in-sync.md`
